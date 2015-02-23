@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+    
+    <SeekBar
+        android:id="@+id/noiseSizeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1" />
+
+    <TextView
+        android:id="@+id/nonsense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="Current Structuring Element Size: 1" />
+
+
+    
+    <ImageView
+        android:id="@+id/noiseImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="284dp"
+        android:src="@drawable/docbrown" />
+
+   
+
+    <Button
+        android:id="@+id/noiseCleanButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Clean" />
+    <Button
+        android:id="@+id/histogramEqualizationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Stretch Contrast" />
+    
+     <Button
+        android:id="@+id/noiseSaveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Save" />
+    
+</LinearLayout>

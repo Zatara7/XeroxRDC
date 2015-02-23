@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.xeroxrdc"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+		
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:name="SampleApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo"
+        android:largeHeap="true"
+        tools:replace="icon, label">
+        
+        <activity
+            android:name="com.example.xeroxrdc.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.xeroxrdc.CameraSettingsActivity"
+            android:parentActivityName="com.example.xeroxrdc.MainActivity"
+            android:label="@string/camera_settings" >
+        </activity>
+        
+        <activity
+            android:name="com.example.xeroxrdc.AppSettingsActivity"
+            android:parentActivityName="com.example.xeroxrdc.MainActivity"
+            android:label="@string/app_settings" >
+        </activity>
+        
+        <activity
+            android:name="com.example.xeroxrdc.FeatureSelectionActivity"
+            android:label="@string/feature_selection" >
+        </activity>
+        
+     	<activity android:name="ar.com.daidalos.afiledialog.FileChooserActivity" />
+     	
+     
+	     <activity
+	         android:name=".CameraRemoteSampleApp"
+	         android:screenOrientation="landscape">         
+	     </activity>
+	     
+	     <activity
+	         android:name=".SampleCameraActivity"
+	         android:screenOrientation="landscape">         
+	     </activity>
+	     
+	      <activity
+	         android:name="com.example.xeroxrdc.VideoPlay"
+	         android:screenOrientation="portrait">         
+	     </activity>
+     
+	      <activity
+	         android:name="com.example.xeroxrdc.EditFileName"
+	         android:screenOrientation="portrait">         
+	     </activity>
+	     
+	      <activity
+	         android:name="com.example.xeroxrdc.EditVideoFileName"
+	         android:screenOrientation="portrait">         
+	     </activity>
+	     
+	      <activity
+	         android:name="com.example.xeroxrdc.NoiseRemoval"
+	         android:screenOrientation="portrait">         
+	     </activity>
+     
+    </application>
+
+</manifest>

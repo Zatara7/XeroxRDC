@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+	<PreferenceCategory android:title="Raw Data" >
+	    
+	    <EditTextPreference
+	        android:defaultValue=""
+	        android:key="pref_rawargs"
+	        android:summary="Raw arguments provided to the Rapsberry Pi via the command line (use with caution)."
+	        android:title="Command Line Arguments" />
+	    
+	</PreferenceCategory>
+    
+    <PreferenceCategory android:title="Image" >
+        
+  		<EditTextPreference
+            android:key="pref_tcpstream"
+            android:title="@string/pref_tcpstream"
+            android:summary="@string/pref_tcpstream_summ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textUri" />
+        
+        <net.jayschwa.android.preference.SliderPreference
+            android:defaultValue="@string/default_slider"
+            android:key="pref_brightness"
+            android:summary="@string/pref_brightness_summ"
+            android:title="@string/pref_brightness" />
+        
+        <net.jayschwa.android.preference.SliderPreference
+            android:defaultValue="@string/default_slider"
+            android:key="pref_contrast"
+            android:summary="@string/pref_contrast_summ"
+            android:title="@string/pref_contrast" />
+        
+        <net.jayschwa.android.preference.SliderPreference
+            android:defaultValue="@string/default_slider"
+            android:key="pref_saturation"
+            android:summary="@string/pref_saturation_summ"
+            android:title="@string/pref_saturation" />
+        
+        <net.jayschwa.android.preference.SliderPreference
+            android:defaultValue="@string/default_slider"
+            android:key="pref_sharpness"
+            android:summary="@string/pref_sharpness_summ"
+            android:title="@string/pref_sharpness" />
+        
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Capture" >
+    </PreferenceCategory>
+    
+    <Preference android:title="Commit Changes"
+                android:key="pref_tcpsend"
+                android:summary="Send changes to Raspberry Pi"/>
+</PreferenceScreen>

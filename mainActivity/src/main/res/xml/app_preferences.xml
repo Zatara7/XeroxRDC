@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <EditTextPreference 
+        android:key="pref_streamURL"
+        android:title="@string/pref_streamURL"
+        android:summary="@string/pref_streamURL_summ"
+        android:defaultValue="@string/default_ip"
+        android:inputType="textUri"
+        />
+    
+    <SwitchPreference
+        android:key="pref_saveframes"
+        android:title="@string/pref_saveframes"
+        android:summary="@string/pref_saveframes_summ"
+        android:switchTextOn="Enabled"
+        android:switchTextOff="Disabled"
+        android:defaultValue="false"
+        />
+    
+    <EditTextPreference
+        android:key="pref_frame_path"
+        android:title="@string/pref_frame_path"
+        android:summary="@string/pref_frame_path_summ"
+        android:defaultValue="@string/default_framepath"
+        />
+</PreferenceScreen>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Feature Selection" >
+        <SwitchPreference
+            android:key="pref_do_marktoedge" 
+            android:title="Mark to Edge"
+            android:switchTextOn="Show" 
+            android:switchTextOff="Hide"
+            android:defaultValue="@bool/default_switch"/>
+        
+        <SwitchPreference
+            android:key="pref_do_marktoref" 
+            android:title="Mark to Ref"
+            android:switchTextOn="Show" 
+            android:switchTextOff="Hide"
+            android:defaultValue="@bool/default_switch"/>
+        
+        <SwitchPreference
+            android:key="pref_do_sensortoedge" 
+            android:title="Sensor to Edge"
+            android:switchTextOn="Show" 
+            android:switchTextOff="Hide"
+            android:defaultValue="@bool/default_switch"/>
+        
+        <SwitchPreference
+            android:key="pref_do_sensortoref" 
+            android:title="Sensor to Ref"
+            android:switchTextOn="Show" 
+            android:switchTextOff="Hide"
+            android:defaultValue="@bool/default_switch"/>
+        
+        <SwitchPreference
+            android:key="pref_show_bad_data" 
+            android:title="Show Invalid Data"
+            android:summaryOn="Measurements will be shown even if feature detection fails."
+            android:summaryOff="Invalid data will be replaced with zeros."
+            android:switchTextOn="Show" 
+            android:switchTextOff="Hide"
+            android:defaultValue="@bool/default_switch"/>
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Feature " >'
+        
+      	<SwitchPreference
+            android:key="pref_find_sensor" 
+            android:title="Locate sensor calibration pattern"
+            android:summaryOn="Look for sensor."
+            android:summaryOff="Do not measure sensor position."
+            android:switchTextOn="Enabled" 
+            android:switchTextOff="Disabled"
+            android:defaultValue="@bool/default_switch"/>
+      	
+      	<SwitchPreference
+            android:key="pref_find_real_edge" 
+            android:title="Locate real paper edge"
+            android:summaryOn="Use actual edge of paper."
+            android:summaryOff="Use calibration lines instead of paper edge."
+            android:switchTextOn="Enabled" 
+            android:switchTextOff="Disabled"
+            android:defaultValue="@bool/default_switch"/>
+        	
+      <!-- 
+      	<ListPreference
+      	    android:key="pref_orientation"
+      	    android:title="Orientation"
+      	    android:entries="@array/orientation"
+      	    android:entryValues="@array/orientation_data"
+      	    />
+       -->
+        	
+    </PreferenceCategory>
+
+</PreferenceScreen>
