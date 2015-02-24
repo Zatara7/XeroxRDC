@@ -1,5 +1,7 @@
 package com.example.sony.cameraremote;
 
+// This is hayder's comment
+
 import java.io.File;
 
 import android.app.Activity;
