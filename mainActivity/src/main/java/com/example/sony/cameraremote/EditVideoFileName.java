@@ -20,7 +20,7 @@ public class EditVideoFileName extends Activity{
 	String videoName;
 	String path;
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{ //saskdjs
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.edit_video_file_name);
