@@ -32,12 +32,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 
 public class RDCImageFragment extends Fragment implements OnClickListener
 {
 	private View rootView;
 	private Button openImage0;
+    private Button contours_btn;
 	private Button openImage1;
 	private Button analysis0;
 	private Button analysis1;
@@ -61,7 +63,8 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		rootView = inflater.inflate(R.layout.imagepage, container, false);
 		
 		openImage0 = (Button) rootView.findViewById(R.id.openimage0);
-		openImage1 = (Button) rootView.findViewById(R.id.openimage1);
+        contours_btn = (Button) rootView.findViewById(R.id.button_contours);
+        openImage1 = (Button) rootView.findViewById(R.id.openimage1);
 		analysis0 = (Button) rootView.findViewById(R.id.analysis0);
 		analysis1 = (Button) rootView.findViewById(R.id.analysis1);
 		imageView0 = (ImageView) rootView.findViewById(R.id.imageView0);
@@ -71,16 +74,13 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		showGridButton = (ToggleButton) rootView.findViewById(R.id.toggleButton1);
 		gridHeight = (SeekBar) rootView.findViewById(R.id.seekBar1);
 		gridWidth = (SeekBar) rootView.findViewById(R.id.seekBar2);
-
-			
 		
 		openImage0.setOnClickListener(this);
 		openImage1.setOnClickListener(this);
 		
 		setGridOnButtonListener();
 		setSeekBarListeners();
-		
-		
+
 		//Set image onTouchListener
 		setImageOnTouchListener("left");
 		setImageOnTouchListener("right");
@@ -98,12 +98,15 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 	{
 //		imageView.setImageURI(Uri.fromFile(new File("drawable/computer_problems.png")));
 	}
-	
-	/* Callback functions */
-	
+
+
 	@Override
 	public void onClick(View v)
 	{
+        if (v==contours_btn) {
+            Intent intent = new Intent(rootView.getContext(), contours.class);
+            startActivityForResult(intent, 0);
+        }
 		if (v==openImage0 || v==openImage1)
 		{
 		     FileChooserDialog dialog = new FileChooserDialog(getActivity());
@@ -184,11 +187,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		     
 		     }
 		     dialog.show();
-		     
-		
-
 		}
-
 	}
 	
 	private void setGridOnButtonListener(){
@@ -365,6 +364,15 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 			}
 			
 		});
+        contours_btn.setOnClickListener(new OnClickListener(){
+            public void onClick(View v){
+
+                Intent newIntent = new Intent(getActivity(), contours.class);
+                startActivity(newIntent);
+
+            }
+
+        });
 		// listener for right analysis button clicked
 		analysis1.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){

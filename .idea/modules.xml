@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MainActivity.iml" filepath="$PROJECT_DIR$/MainActivity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XeroxRDC.iml" filepath="$PROJECT_DIR$/XeroxRDC.iml" />
       <module fileurl="file://$PROJECT_DIR$/aFileDialog/aFileDialog.iml" filepath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
       <module fileurl="file://$PROJECT_DIR$/mainActivity/mainActivity.iml" filepath="$PROJECT_DIR$/mainActivity/mainActivity.iml" />
     </modules>

@@ -12,26 +12,26 @@ public final class R {
 	}
 	public static final class drawable {
 		public static final int add = 0x7f020000;
-		public static final int document = 0x7f020004;
-		public static final int document_gray = 0x7f020005;
-		public static final int folder = 0x7f020006;
-		public static final int ic_launcher = 0x7f020007;
-		public static final int no = 0x7f020008;
-		public static final int tick = 0x7f02000d;
+		public static final int document = 0x7f020005;
+		public static final int document_gray = 0x7f020006;
+		public static final int folder = 0x7f020007;
+		public static final int ic_launcher = 0x7f020008;
+		public static final int no = 0x7f020009;
+		public static final int tick = 0x7f02000e;
 	}
 	public static final class id {
-		public static final int buttonAdd = 0x7f0c0029;
-		public static final int buttonOk = 0x7f0c002a;
-		public static final int imageViewIcon = 0x7f0c002b;
-		public static final int linearLayoutButtons = 0x7f0c0028;
-		public static final int linearLayoutFiles = 0x7f0c0027;
-		public static final int rootLayout = 0x7f0c0025;
-		public static final int scrollView1 = 0x7f0c0026;
-		public static final int textViewLabel = 0x7f0c002c;
+		public static final int buttonAdd = 0x7f0c0030;
+		public static final int buttonOk = 0x7f0c0031;
+		public static final int imageViewIcon = 0x7f0c0032;
+		public static final int linearLayoutButtons = 0x7f0c002f;
+		public static final int linearLayoutFiles = 0x7f0c002e;
+		public static final int rootLayout = 0x7f0c002c;
+		public static final int scrollView1 = 0x7f0c002d;
+		public static final int textViewLabel = 0x7f0c0033;
 	}
 	public static final class layout {
-		public static final int daidalos_file_chooser = 0x7f030005;
-		public static final int daidalos_file_item = 0x7f030006;
+		public static final int daidalos_file_chooser = 0x7f030007;
+		public static final int daidalos_file_item = 0x7f030008;
 	}
 	public static final class string {
 		public static final int daidalos_accept = 0x7f090006;

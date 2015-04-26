@@ -9,91 +9,92 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
-        
+
         <Button
-	        android:id="@+id/chooseDirectoryButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Choose Directory" />
-	    
-	    <Button
-	        android:id="@+id/referenceButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Select Features" />
-	    
-	    <Button
-	        android:id="@+id/imgscan"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Perform Analysis"
-	        android:textStyle="bold" />
+            android:id="@+id/chooseDirectoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Directory" />
+
+        <Button
+            android:id="@+id/referenceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Features" />
+
+        <Button
+            android:id="@+id/imgscan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perform Analysis"
+            android:textStyle="bold" />
 
 
-	  
+
         <Button
-	        android:id="@+id/saveGraphButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Save Graph" />
-	    
-	    <TextView
+            android:id="@+id/saveGraphButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Graph" />
+
+        <TextView
             android:id="@+id/directoryChosenLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="Directory Chosen: " />
-	    	    
-	   	<TextView
+
+        <TextView
             android:id="@+id/directoryChosenTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
             android:text="" />
-	   	
 
 
-	</LinearLayout>
-    
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-	    
-		<LinearLayout
-		    android:id="@+id/lineChart"
-		    android:layout_height="wrap_content"
-		    android:layout_width="700dp"
-		    android:orientation="horizontal" />
-		
-		<LinearLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
-		
-		    <ImageView
-		        android:id="@+id/imageView1"
-		        android:layout_width="272dp"
-		        android:layout_height="204dp"
-		        android:layout_gravity="center"
-		         />
-		    
-		   	<ImageView
-		        android:id="@+id/imageView2"
-		        android:layout_width="272dp"
-		        android:layout_height="204dp"
-		        android:layout_gravity="center"
-		        />
-		   	
-		   	<Switch 
-			    android:id="@+id/imageSwitch"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:textOn="Top Image"
-			    android:textOff="Bottom Image"
-			    android:layout_gravity="center"/>
-	    </LinearLayout>
-		   	
-	</LinearLayout>
-    
+
+        <com.androidplot.xy.XYPlot
+            android:id="@+id/lineChart"
+            android:layout_width="700dp"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            title="Title"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="272dp"
+                android:layout_height="204dp"
+                android:layout_gravity="center"
+                />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="272dp"
+                android:layout_height="204dp"
+                android:layout_gravity="center"
+                />
+
+            <Switch
+                android:id="@+id/imageSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="Top Image"
+                android:textOff="Bottom Image"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

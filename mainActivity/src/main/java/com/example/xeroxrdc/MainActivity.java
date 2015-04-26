@@ -135,7 +135,7 @@ public class MainActivity extends FragmentActivity
 	{
 		startActivity( new Intent(this, AppSettingsActivity.class) );
 	}
-	
+
 	public void cameraSettings(MenuItem item)
 	{
 		startActivity( new Intent(this, CameraSettingsActivity.class) );
@@ -221,5 +221,4 @@ public class MainActivity extends FragmentActivity
 			return null;
 		}
 	}
-
 }

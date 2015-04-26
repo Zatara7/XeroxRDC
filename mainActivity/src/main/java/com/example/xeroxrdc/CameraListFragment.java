@@ -68,6 +68,8 @@ public class CameraListFragment extends Fragment implements OnClickListener
 		sonyButton.setOnClickListener(this);
 		
 		//connectButton.setEnabled(false);
+
+
 		
 		// Initialize adapter for displaying CameraDefinitions in ListView containing TextViews.
 		adapter = new ArrayAdapter<CameraDefinition>(getActivity(), android.R.layout.simple_list_item_1, cameradefs)
