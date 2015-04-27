@@ -3,15 +3,16 @@ package com.example.xeroxrdc;
 /**
  * Created by Zatara7 on 4/23/2015.
  */
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.app.Activity;
@@ -19,12 +20,17 @@ import android.graphics.Bitmap;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.*;
+import org.opencv.features2d.*;
+import org.opencv.calib3d.*;
+import org.opencv.highgui.*;
 import org.opencv.imgproc.Imgproc;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -33,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class contours extends Activity{
-    private static final String  TAG = "OCVSample::Activity";
+public class contours extends Activity {
+    private ArrayList<Rect> rectBoundaries;
     int imgWidth, imgHeight, analysisHeight, analysisWidth;
 
     // For the reference selection
@@ -44,11 +50,7 @@ public class contours extends Activity{
     RadioButton rb;
     String rbValue;
     boolean yes = true;
-
-    //  For openCV stuff
     List<String> list = new ArrayList<>();
-    private Rect r;
-    private ArrayList<Rect> rectBoundaries;
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
@@ -86,7 +88,6 @@ public class contours extends Activity{
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,51 +97,45 @@ public class contours extends Activity{
         iv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-                imgWidth = iv.getMeasuredWidth();
-                imgHeight = iv.getMeasuredHeight();
-
-                int xx, yy, offset;
-                double ratio;
-
-                ratio = ((double)analysisWidth / (double)imgWidth);
-                if(ratio < ((double)analysisHeight / (double)imgHeight)) {
-                    ratio = (double)analysisHeight / (double)imgHeight;
-                    offset = (int)(imgWidth - (analysisWidth / ratio)) / 2;
-                    xx = (int)((event.getX() - offset) * ratio);
-                    yy = (int)(event.getY() * ratio);
-                } else {
-                    offset = (int)(imgHeight - (analysisHeight / ratio)) / 2;
-                    xx = (int) (event.getX() * ratio);
-                    yy = (int) ((event.getY() - offset) * ratio);
-                }
-
-                rg = (RadioGroup) findViewById(R.id.radio1);
-                rb = (RadioButton) findViewById(R.id.radio_yes);
-
-                System.out.println("I am in the listener!");
-
-                int checker = 0;
-                for (int i = 0; i < rectBoundaries.size(); i++) {
-                    Rect j = rectBoundaries.get(i);
-
-                    if (j.contains(new Point(event.getX(), event.getY()))) {
-                        checker = 1;
-                        break;
-                    }
-                }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //code when the object is detected and pop up displays to get the input from user
-                    if (checker == 1) {
+                    imgWidth = iv.getMeasuredWidth();
+                    imgHeight = iv.getMeasuredHeight();
 
+                    int xx, yy, offset;
+                    double ratio;
+
+                    ratio = ((double)analysisWidth / (double)imgWidth);
+                    if(ratio < ((double)analysisHeight / (double)imgHeight)) {
+                        ratio = (double)analysisHeight / (double)imgHeight;
+                        offset = (int)(imgWidth - (analysisWidth / ratio)) / 2;
+                        xx = (int)((event.getX() - offset) * ratio);
+                        yy = (int)(event.getY() * ratio);
+                    } else {
+                        offset = (int)(imgHeight - (analysisHeight / ratio)) / 2;
+                        xx = (int) (event.getX() * ratio);
+                        yy = (int) ((event.getY() - offset) * ratio);
+                    }
+
+                    System.out.println("I am in the listener!");
+                    int checker = 0;
+
+                    for (int i = 0; i < rectBoundaries.size(); i++) {
+                        Rect j = rectBoundaries.get(i);
+
+                        if (j.contains(new Point(xx, yy))) {
+                            System.out.println("Rect X: " + j.x + " Rect Y: " + j.y + " Rect width:" + j.width + " Rect height:" + j.height);
+                            checker = 1;
+                        }
+                    }
+
+                    if (checker == 1) {
                         object_clicked();
 
                     } else {
                         System.out.println("Object was not clicked!");
                         Toast.makeText(getApplicationContext(), "Object wasnt clicked!", Toast.LENGTH_SHORT).show();
                     }
-                } //for action down
-
+                }
                 return true;
             }
         });
@@ -151,7 +146,7 @@ public class contours extends Activity{
         public void onManagerConnected(int status) {
             if (status == LoaderCallbackInterface.SUCCESS ) {
                 // now we can call opencv code !
-                detect_contours();
+                find_contours();
             } else {
                 super.onManagerConnected(status);
             }
@@ -159,23 +154,21 @@ public class contours extends Activity{
     };
 
     @Override
-    public void onResume() {;
+    public void onResume() {
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_7,this, mLoaderCallback);
         // you may be tempted, to do something here, but it's *async*, and may take some time,
         // so any opencv call here will lead to unresolved native errors.
     }
 
-    public void detect_contours() {
+    public void find_contours() {
+        Rect r;
         // Open image
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aligned1);
-        int mPhotoWidth = mBitmap.getWidth();
-        int mPhotoHeight = mBitmap.getHeight();
-        Mat img = new Mat();
-        Utils.bitmapToMat(mBitmap, img);
 
-        // Pad the borders of the image with white pixels
-        Core.rectangle( img, new Point(0,0), new Point(img.rows(), img.cols()), new Scalar(255,255,255) );
+        Mat img = new Mat();
+        Mat newImg = new Mat();
+        Utils.bitmapToMat(mBitmap, img);
 
         //Use canny edge detector to detect borders
         Mat canny = new Mat();
@@ -185,6 +178,7 @@ public class contours extends Activity{
         ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
         Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
         //draw the contours on the image so you can see the objects
         Imgproc.drawContours(img, contours, -1, new Scalar(255, 0, 0));
 
@@ -194,7 +188,7 @@ public class contours extends Activity{
         analysisWidth = mBitmap.getWidth();
 
         // find the imageview and draw it!
-        ImageView iv = (ImageView) findViewById(R.id.imageView1);
+        final ImageView iv = (ImageView) findViewById(R.id.imageView1);
         iv.setImageBitmap(mBitmap);
 
         // Store the contour boundaries
