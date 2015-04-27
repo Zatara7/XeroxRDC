@@ -9,13 +9,6 @@
         <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\support-v4-19.1.0-0c815933550ec142094152da387cb8353ca891ea.jar" />
     </item>
     <item
-        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\androidplot-core-0.6.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3db0daea52375b26bfa61c59b8df93950bdefbbc">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\androidplot-core-0.6.1-a0f9423bdd0270c4aaaee261e916fcc6fb6fd253.jar" />
-    </item>
-    <item
         jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\achartengine-1.1.0.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -23,10 +16,17 @@
         <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\achartengine-1.1.0-8accd97b0b27b0db073fd496cf8e9375280e893e.jar" />
     </item>
     <item
+        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\androidplot-core-0.6.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3db0daea52375b26bfa61c59b8df93950bdefbbc">
+        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\androidplot-core-0.6.1-a0f9423bdd0270c4aaaee261e916fcc6fb6fd253.jar" />
+    </item>
+    <item
         jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\exploded-aar\XeroxRDC\aFileDialog\unspecified\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="b66742fa80ac3d4df7ba8fca321dc23aa4c43fe3">
+        sha1="21b404d7e472cc341aa3ddcf3bcaf68055f67d8d">
         <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\classes-3b46740f082512c129ff6102a97ace100a8ed95a.jar" />
     </item>
     <item

@@ -9,12 +9,8 @@ package com.example.xeroxrdc;
 
 import java.io.File;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +69,7 @@ public class RDCVideoFragment extends Fragment
     		     dialog.setFilter(".*mp4");	// select only mp4 files
     		     dialog.setShowOnlySelectable(true);	// only show these files in list
     			     dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
-    			         public void onFileSelected(Dialog source, File file) {
+    			         public File onFileSelected(Dialog source, File file) {
     			             source.hide();
     			             Toast toast = Toast.makeText(source.getContext(), "File selected: " + file.getName(), Toast.LENGTH_LONG);
     			             toast.show();
@@ -128,7 +123,8 @@ public class RDCVideoFragment extends Fragment
     		  */
     		    			 
     		    			 //videoView.start();
-    			         }
+                             return file;
+                         }
     			         // We can remove this... as long as it doesnt break it
     			         public void onFileSelected(Dialog source, File folder, String name) {
     			             source.hide();

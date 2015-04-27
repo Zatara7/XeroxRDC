@@ -136,10 +136,10 @@ public class FileChooserDialog extends Dialog implements FileChooser {
 	public interface OnFileSelectedListener {
 		/**
 		 * Called when a file has been selected.
-		 * 
-		 * @param file The file selected.
-		 */
-		void onFileSelected(Dialog source, File file);
+		 *
+         * @param file The file selected.
+         */
+		File onFileSelected(Dialog source, File file);
 		
 		/**
 		 * Called when an user wants to be create a file.

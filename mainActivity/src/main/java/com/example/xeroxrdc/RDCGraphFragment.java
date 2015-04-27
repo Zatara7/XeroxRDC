@@ -22,21 +22,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
-
-
-import com.androidplot.xy.XYPlot;
 
 public class RDCGraphFragment extends Fragment implements OnClickListener
 {
@@ -50,6 +45,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	private Button saveGraphButton;
 	public static boolean topImage = true;
 	public static boolean graphExists = false;
+    private List<String> filenameList;
 
     private TextView chooseDirectoryTextView;
 
@@ -132,7 +128,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	 * @param parentDir - The parent directory
 	 * @return results - The files in the directory in alphabetical order
 	 */
-	private List<String> getAndAlphabetizeListFilenames(String parentDir)
+	public List<String> getAndAlphabetizeListFilenames(String parentDir)
 	{
 		List<String> results = new ArrayList<String>();
 		File[] files = new File(parentDir).listFiles();
@@ -155,7 +151,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	 * @param filenameList ArrayList of filenames
 	 * @param filenameAndDataList ArrayList of FilenameAndData objects
 	 */
-	private void addFilenamesToFilenameAndDataList(List<String> filenameList, List<FilenameAndData> filenameAndDataList)
+	public void addFilenamesToFilenameAndDataList(List<String> filenameList, List<FilenameAndData> filenameAndDataList)
 	{
 		long sizeList = filenameList.size();
 		for (int i = 0; i < sizeList; i++)
@@ -174,10 +170,11 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	 * 
 	 * Subclass that extends AsyncTask to spawn a new thread for the image analysis. Also handles progress bar.
 	 */
-	private class imageAnalysis extends AsyncTask<List<FilenameAndData>, Integer, Integer> {
+	private class imageAnalysis extends AsyncTask<String , Integer, Integer> {
 		ProgressDialog usrDialog;
 		int numValsInList;				//Stores number of frames passed. This way .size() isn't called multiple times
-		
+        String xmlFile;
+
 		protected void onPreExecute() {
 			usrDialog = new ProgressDialog(getActivity());		//Prepping progress bar
 			usrDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -186,9 +183,21 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 			usrDialog.show();
 		}
 		
-		@SafeVarargs
-        protected final Integer doInBackground(List<FilenameAndData>... filenameAndDataList) {		//This is just the old imageAnalysisDriver function
-			return 0;
+		//@SafeVarargs
+        protected final Integer doInBackground(String[] directory) {		//This is just the old imageAnalysisDriver function
+            // Load filenames from a directory
+            filenameList = getAndAlphabetizeListFilenames(directory[0]);
+
+            File[] fileList = new File(directory[0]).listFiles();
+            for(File file : fileList) {
+                String ext = getExtension(file.getName());
+                if(ext.equalsIgnoreCase("xml")) {
+                    xmlFile = file.getAbsolutePath();
+                    break;
+                }
+            }
+
+            return 0;
 		}
 
 /*		protected void onProgressUpdate(Integer... progress) {
@@ -197,12 +206,12 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 */
 		protected void onPostExecute(Integer result) {
             // Display the graphs                               //This contains the function to start the graph. This ensures that
-            displayLineGraph();                    			    // android waits for the analysis to be complete before rendering
+            displayLineGraph(xmlFile);                    			    // android waits for the analysis to be complete before rendering
 																// the graph.
 			graphExists = true;
             usrDialog.hide();
 		}
-	}
+    }
 
 	/**
 	 * @author Andrew
@@ -259,41 +268,16 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 					"Please choose a directory to load a stream from",
 					Toast.LENGTH_SHORT).show();
 			return;
-		} 
-		
-		
-		// Get switches from preference manager
-/*		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		boolean do_marktoedge = pref.getBoolean("pref_do_marktoedge", true);
-		boolean do_marktoref = pref.getBoolean("pref_do_marktoref", true);
-		boolean do_sensortoedge = pref.getBoolean("pref_do_sensortoedge", true);
-		boolean do_sensortoref = pref.getBoolean("pref_do_sensortoref", true);
-		
-		boolean findsensor = pref.getBoolean("pref_find_sensor", false);
-		boolean realedge = pref.getBoolean("pref_find_real_edge", false);
-		int orient = pref.getInt("pref_orientation", ROFRider.METHOD_CALIBRATION_ROBUST);
-		
-		if(!do_marktoedge  && !do_marktoref && !do_sensortoedge && !do_sensortoref){
-			Toast.makeText(getActivity(),
-					"Please choose at least one feature that you want to analyze in Select Features", Toast.LENGTH_SHORT)
-					.show();
-			return;
 		}
-*/
-		// Load filenames from a directory
-		List<String> filenameList;
-		filenameList = getAndAlphabetizeListFilenames(directory);
 
-		// Store filenames to filenameAndDataList
-        List<FilenameAndData> filenameAndDataList = new ArrayList<FilenameAndData>();
-		addFilenamesToFilenameAndDataList(filenameList, filenameAndDataList);
+        String[] dir = {directory};
 
 		// Perform image analysis, still have to work on this
 		// This will be Chris's function
 		// ****************************************************
 		imageAnalysis task = new imageAnalysis();				//I've switched this to an asynctask, see the subclass I made for more
-		task.numValsInList = filenameAndDataList.size();
-        task.execute(filenameAndDataList);
+		task.numValsInList = 1;//filenameAndDataList.size(); Took this out
+        task.execute(dir); // Changed this
     }
 
 	private void onClickChooseDirectory()
@@ -305,28 +289,26 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 		// "/XeroxRDC/");
 		dialog.loadFolder("/storage/sdcard0/XeroxRDC/");
 
-		dialog.addListener(new FileChooserDialog.OnFileSelectedListener()
-		{
-			public void onFileSelected(Dialog source, File file)
-			{
-				source.hide();
-				Toast toast = Toast.makeText(source.getContext(),
-						"Folder selected: " + file.getName(), Toast.LENGTH_LONG);
-				chooseDirectoryTextView.setText(file.getAbsolutePath()
-						+ File.separator);
-				toast.show();
-			}
+		dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
+            public File onFileSelected(Dialog source, File file) {
+                source.hide();
+                Toast toast = Toast.makeText(source.getContext(),
+                        "Folder selected: " + file.getName(), Toast.LENGTH_LONG);
+                chooseDirectoryTextView.setText(file.getAbsolutePath()
+                        + File.separator);
+                toast.show();
+                return file;
+            }
 
-			// Might be able to take this out:
-			public void onFileSelected(Dialog source, File folder, String name)
-			{
-				source.hide();
-				Toast toast = Toast.makeText(source.getContext(),
-						"File created: " + folder.getName() + "/" + name,
-						Toast.LENGTH_LONG);
-				toast.show();
-			}
-		});
+            // Might be able to take this out:
+            public void onFileSelected(Dialog source, File folder, String name) {
+                source.hide();
+                Toast toast = Toast.makeText(source.getContext(),
+                        "File created: " + folder.getName() + "/" + name,
+                        Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
 
 		dialog.show();
 	}
@@ -341,52 +323,11 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	}
 
 	// This is where the graph is created/drawn
-	// This might help us:
-	// http://stackoverflow.com/a/4079692/2561421
-	// http://stackoverflow.com/a/6910293/2561421
-	// http://wptrafficanalyzer.in/blog/android-drawing-time-chart-with-timeseries-in-achartengine/
-	// code.google.com/p/achartengine/
-	// Also look at XYChartBuilder.java and AverageTemperatureChart.java demos
-	// in the api's demos folder
-	// And this is for making dynamic graphs:
-	// http://www.youtube.com/watch?v=E9fozQ5NlSo
-
-	private void displayLineGraph()
+	private void displayLineGraph(String xmlFile)
 	{
-        XmlObjects xmlObjects = new XmlObjects();
         MyPlotActivity plotActivity = new MyPlotActivity();
         plotActivity.setView(rootView);
-        plotActivity.initializePlot(xmlObjects);
-        //XYPlot plot = plotActivity.getXyPlot();
-        //XYPlot layout = (XYPlot) rootView.findViewById(R.id.lineChart);
-        //layout.addView(view);
-
-            /*MyPlotActivity plotActivity = new MyPlotActivity();
-            XYPlot plot = plotActivity.getXyPlot();
-            LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.lineChart);
-            view = plot.getRootView();
-            layout.removeView(view);
-            layout.addView(view);*/
-
-/*		if (mChartView == null)
-		{
-			LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.lineChart);
-			mChartView = ChartFactory.getLineChartView(getActivity(), mDataset, mRenderer);
-			layout.addView(mChartView);
-		}
-		else
-		{
-			LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.lineChart);
-			layout.removeView(mChartView);
-			
-			mChartView = ChartFactory.getLineChartView(getActivity(), mDataset,
-					mRenderer);
-			layout.addView(mChartView);
-			//mChartView.repaint();
-
-		}
-*/
-
+        plotActivity.initializePlot(xmlFile, filenameList);
     }
 
 }

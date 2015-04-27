@@ -116,7 +116,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 			
 		     if (v == openImage0){
 			     dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
-			         public void onFileSelected(Dialog source, File file) {
+			         public File onFileSelected(Dialog source, File file) {
 			             source.hide();
 			             Toast toast = Toast.makeText(source.getContext(), "File selected: " + file.getName(), Toast.LENGTH_LONG);
 			             toast.show();
@@ -139,9 +139,10 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		 				int i = directoryPathLeft.lastIndexOf("/");
 		 				fileNameLeft = directoryPathLeft.substring(i + 1);
 		 				directoryPathLeft = directoryPathLeft.substring(0,i);
-		            	 
-		            	 
-			         }
+
+
+                         return file;
+                     }
 			         // We can remove this... as long as it doesnt break it
 			         public void onFileSelected(Dialog source, File folder, String name) {
 			             source.hide();
@@ -152,7 +153,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		     }
 		     else if (v == openImage1){
 			     dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
-			         public void onFileSelected(Dialog source, File file) {
+			         public File onFileSelected(Dialog source, File file) {
 			             source.hide();
 			             Toast toast = Toast.makeText(source.getContext(), "File selected: " + file.getName(), Toast.LENGTH_LONG);
 			             toast.show();
@@ -176,7 +177,8 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 			 				int i = directoryPathRight.lastIndexOf("/");
 			 				fileNameRight = directoryPathRight.substring(i + 1);
 			 				directoryPathRight = directoryPathRight.substring(0,i);
-			         }
+                         return file;
+                     }
 			         // We can remove this... as long as it doesnt break it
 			         public void onFileSelected(Dialog source, File folder, String name) {
 			             source.hide();
