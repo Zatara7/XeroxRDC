@@ -2,39 +2,39 @@
 <items version="2" >
 
     <item
-        jar="F:\Android\SDK\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\support-v4-19.1.0-0c815933550ec142094152da387cb8353ca891ea.jar" />
-    </item>
-    <item
-        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\achartengine-1.1.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9932e3fb9fbe54e80873e77f72a99f79e33b3250">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\achartengine-1.1.0-8accd97b0b27b0db073fd496cf8e9375280e893e.jar" />
-    </item>
-    <item
-        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\androidplot-core-0.6.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3db0daea52375b26bfa61c59b8df93950bdefbbc">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\androidplot-core-0.6.1-a0f9423bdd0270c4aaaee261e916fcc6fb6fd253.jar" />
-    </item>
-    <item
-        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\exploded-aar\XeroxRDC\aFileDialog\unspecified\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="21b404d7e472cc341aa3ddcf3bcaf68055f67d8d">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\classes-3b46740f082512c129ff6102a97ace100a8ed95a.jar" />
-    </item>
-    <item
-        jar="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\libs\opencv library - 2.4.7.jar"
+        jar="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/libs/opencv library - 2.4.7.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4ba019370fb488bb7eee38aa7d67e21552c70b52">
-        <dex dex="C:\Users\Zatara7\AndroidStudioProjects\XeroxRDC\mainActivity\build\intermediates\pre-dexed\debug\opencv library - 2.4.7-9944011ee64436502427a7e6c7b86c3583834343.jar" />
+        <dex dex="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/pre-dexed/debug/opencv library - 2.4.7-e5b81d4891c773a313e8dee7749033fb48c1e0ad.jar" />
+    </item>
+    <item
+        jar="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/libs/androidplot-core-0.6.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3db0daea52375b26bfa61c59b8df93950bdefbbc">
+        <dex dex="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/pre-dexed/debug/androidplot-core-0.6.1-f64a3d2b7fb334c3efb361d8e9f39d0ba6b61a6d.jar" />
+    </item>
+    <item
+        jar="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/exploded-aar/XeroxRDC/aFileDialog/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0e7b6fb550e53c85d337f265718a76be88be3ac2">
+        <dex dex="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/pre-dexed/debug/classes-2974f98a028ade0033d953bc2e060d1837e52315.jar" />
+    </item>
+    <item
+        jar="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/libs/achartengine-1.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9932e3fb9fbe54e80873e77f72a99f79e33b3250">
+        <dex dex="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/pre-dexed/debug/achartengine-1.1.0-72a96c81aadab5b54ac809556e5f8e58c14f2af1.jar" />
+    </item>
+    <item
+        jar="/Users/robertkatulka/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/robertkatulka/AndroidstudioProjects/newXerox/XeroxRDC/mainActivity/build/intermediates/pre-dexed/debug/support-v4-19.1.0-1567420a140e26242400fa36b37c628b262471de.jar" />
     </item>
 
 </items>

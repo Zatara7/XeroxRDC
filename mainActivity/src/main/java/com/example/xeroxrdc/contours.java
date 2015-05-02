@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -36,6 +38,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -51,47 +54,13 @@ public class contours extends Activity {
     String rbValue;
     boolean yes = true;
     List<String> list = new ArrayList<>();
-
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-        switch (view.getId()) {
-            case R.id.radio_yes:
-                if (checked) {
-                    if(yes) {
-                        yes = false;
-                        rbValue = "yes";
-                        Toast.makeText(getApplicationContext(),
-                                "Selected Yes", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        //Alert dialog if the reference object is already selected
-                        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                        alertDialog.setTitle("Alert");
-                        alertDialog.setMessage("Reference object already set");
-                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertDialog.dismiss();
-                            }
-                        });
-
-                        alertDialog.show();
-                    }
-                    break;
-                }
-            case R.id.radio_no:
-                if (checked) {
-                    rbValue = "no";
-                    Toast.makeText(getApplicationContext(),
-                            "Selected No", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-        }
-    }
+    XmlObjects selectedObjects = new XmlObjects();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contours);
+        Button button = (Button) findViewById(R.id.continueButton);
         final ImageView iv = (ImageView) findViewById(R.id.imageView1);
 
         iv.setOnTouchListener(new View.OnTouchListener() {
@@ -119,23 +88,49 @@ public class contours extends Activity {
                     System.out.println("I am in the listener!");
                     int checker = 0;
 
-                    for (int i = 0; i < rectBoundaries.size(); i++) {
-                        Rect j = rectBoundaries.get(i);
+                    Iterator<XmlObject> iterator = selectedObjects.getXmlObjects().iterator();
 
-                        if (j.contains(new Point(xx, yy))) {
-                            System.out.println("Rect X: " + j.x + " Rect Y: " + j.y + " Rect width:" + j.width + " Rect height:" + j.height);
+                    while(iterator.hasNext()) {
+                        XmlObject xmlObject = iterator.next();
+                        if(xmlObject.getRect().contains(new Point(xx,yy))) {
+                            object_clicked(xmlObject);
                             checker = 1;
                         }
                     }
 
-                    if (checker == 1) {
-                        object_clicked();
+                    if(checker == 0) {
+                        for (int i = 0; i < rectBoundaries.size(); i++) {
+                            Rect j = rectBoundaries.get(i);
 
-                    } else {
+                            if (j.contains(new Point(xx, yy))) {
+                                System.out.println("Rect X: " + j.x + " Rect Y: " + j.y + " Rect width:" + j.width + " Rect height:" + j.height);
+                                checker = 1;
+                                XmlObject xmlObject = new XmlObject();
+                                xmlObject.setRect(j);
+                                xmlObject = object_clicked(xmlObject);
+
+     /* Figure this out */      selectedObjects.add(xmlObject);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if(checker == 0) {
                         System.out.println("Object was not clicked!");
                         Toast.makeText(getApplicationContext(), "Object wasnt clicked!", Toast.LENGTH_SHORT).show();
                     }
                 }
+                return true;
+            }
+        });
+
+        button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                XmlDataFile xmlDataFile = new XmlDataFile();
+                xmlDataFile.writeXml(selectedObjects, "/storage/sdcard0/XeroxRDC/2015_02_09/test.xml");
+
                 return true;
             }
         });
@@ -208,101 +203,31 @@ public class contours extends Activity {
         }
     }
 
-    public void object_clicked() {
+    public XmlObject object_clicked(final XmlObject xmlObject) {
         LayoutInflater layout = LayoutInflater.from(contours.this);
         View promptView = layout.inflate(R.layout.activity2, null);
+        final EditText editText = (EditText) promptView.findViewById(R.id.edit1);
+        editText.setText(xmlObject.getName(), TextView.BufferType.EDITABLE);
         //AlertDialog to get the name of the object and set it as reference object or not
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(contours.this);
         alert.setView(promptView);
-        final EditText editText = (EditText) promptView.findViewById(R.id.edit1);
-
-        alert.setTitle("Popup");
-
+        alert.setTitle("Object Selection");
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String editValue = editText.getText().toString().trim();
-                // if the object name entry is blank
+                String name = editText.getText().toString().trim();
 
-                if (editValue == null || editValue.equals("")) {
-
-                    final AlertDialog alertName = new AlertDialog.Builder(contours.this).create();
-                    alertName.setTitle("Alert");
-                    alertName.setMessage("Name should not be blank");
-                    alertName.setButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            alertName.dismiss();
-                        }
-                    });
-
-                    alertName.show();
-
+                if(checkName(name, which)) {
+                    xmlObject.setName(name);
                 }
-                // if the object name is entered
-                else {
-                    try {
-                        //Internal storage file in the path /data/data/package_name/files/user_input.txt
-                        File file = context.getFileStreamPath("user_input.txt");
-                        if (file == null || !file.exists()) {
-                            try {
-                                OutputStreamWriter os = new OutputStreamWriter(openFileOutput("user_input.txt", Context.MODE_APPEND));
-                                os.write(editValue);
-                                os.write(" ");
-                                os.write(rbValue);
-                                os.write("\n");
-                                os.close();
-                                Toast.makeText(contours.this, "Entry saved", Toast.LENGTH_LONG).show();
-                            } catch (Throwable t) {
-
-                                Toast.makeText(contours.this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            try {
-                                BufferedReader bf = new BufferedReader(new InputStreamReader(openFileInput("user_input.txt")));
-                                String str;
-
-                                while ((str = bf.readLine()) != null) {
-
-                                    StringTokenizer st = new StringTokenizer(str);
-                                    while (st.hasMoreTokens()) {
-
-                                        list.add(st.nextToken());
-                                    }
-                                }
-                                //To check if the object name already exists or not
-
-                                if (list.contains(editValue)) {
-                                    Toast.makeText(contours.this, "Name already exists.", Toast.LENGTH_LONG).show();
-                                }
-
-                                //write the input from the user to the file for further processing
-                                else {
-                                    try {
-                                        OutputStreamWriter os = new OutputStreamWriter(openFileOutput("user_input.txt", Context.MODE_APPEND));
-                                        os.write(editValue);
-                                        os.write(" ");
-                                        os.write(rbValue);
-                                        os.write("\n");
-                                        os.close();
-                                        Toast.makeText(contours.this, "Saved", Toast.LENGTH_LONG).show();
-
-                                    } catch (Throwable t) {
-
-                                        Toast.makeText(contours.this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                                bf.close();
-                            }
-                            catch (Throwable t) {
-                                Toast.makeText(contours.this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        }//else
-                    } catch (Throwable t) {
-                        Toast.makeText(contours.this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-                    }
+                if(checkReference()) {
+                    xmlObject.setReference(Boolean.TRUE);
+                } else {
+                    xmlObject.setReference(Boolean.FALSE);
                 }
+
+                selectedObjects.print();
             }
         });
 
@@ -314,5 +239,107 @@ public class contours extends Activity {
         });
         alert.create();
         alert.show();
+        return xmlObject;
+    }
+
+    private Boolean checkName(String name, int which) {
+        Boolean checker = Boolean.TRUE;
+        if (name.equals("")) {
+            final AlertDialog alertName = new AlertDialog.Builder(contours.this).create();
+            alertName.setTitle("Alert");
+            alertName.setMessage("Name should not be blank.  No data saved.");
+            alertName.setButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    alertName.dismiss();
+                }
+            });
+            alertName.show();
+            checker = Boolean.FALSE;
+        } else {
+            for (XmlObject object : selectedObjects.getXmlObjects()) {
+                if (name.equals(object.getName())) {
+                    checker = Boolean.FALSE;
+                    final AlertDialog a = new AlertDialog.Builder(contours.this).create();
+                    a.setTitle("Alert");
+                    a.setMessage("Name already exists.  Name data will see no change; however, all other data will be saved.");
+                    a.setButton(which, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            a.dismiss();
+                        }
+                    });
+
+                    a.show();
+                }
+            }
+        }
+        return checker;
+    }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.radio_yes:
+                System.out.println("Here");
+                for(XmlObject xmlObject : selectedObjects.getXmlObjects()) {
+                    if(xmlObject.getReference()) {
+                        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                        alertDialog.setTitle("Alert");
+                        alertDialog.setMessage("Reference object already set.  Reference will be saved as false.  To save this as reference, remove previous reference.");
+                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        alertDialog.show();
+                        return;
+                    }
+                }
+
+                rbValue = "yes";
+
+                System.out.println(rbValue);
+
+                break;
+
+                /*if (checked) {
+                    if(yes) {
+                        yes = false;
+                        rbValue = "yes";
+                        Toast.makeText(getApplicationContext(),
+                                "Selected Yes", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        //Alert dialog if the reference object is already selected
+                        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                        alertDialog.setTitle("Alert");
+                        alertDialog.setMessage("Reference object already set");
+                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        alertDialog.show();
+                    }
+                    break;
+                }*/
+            case R.id.radio_no:
+                if (checked) {
+                    rbValue = "no";
+                    System.out.println(rbValue);
+                    //Toast.makeText(getApplicationContext(), "Selected No", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+        }
+    }
+
+    private Boolean checkReference() {
+        if(rbValue.equals("yes")) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
     }
 }

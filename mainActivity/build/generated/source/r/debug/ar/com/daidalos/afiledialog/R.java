@@ -20,14 +20,14 @@ public final class R {
 		public static final int tick = 0x7f02000e;
 	}
 	public static final class id {
-		public static final int buttonAdd = 0x7f0c0030;
-		public static final int buttonOk = 0x7f0c0031;
-		public static final int imageViewIcon = 0x7f0c0032;
-		public static final int linearLayoutButtons = 0x7f0c002f;
-		public static final int linearLayoutFiles = 0x7f0c002e;
-		public static final int rootLayout = 0x7f0c002c;
-		public static final int scrollView1 = 0x7f0c002d;
-		public static final int textViewLabel = 0x7f0c0033;
+		public static final int buttonAdd = 0x7f0c0031;
+		public static final int buttonOk = 0x7f0c0032;
+		public static final int imageViewIcon = 0x7f0c0033;
+		public static final int linearLayoutButtons = 0x7f0c0030;
+		public static final int linearLayoutFiles = 0x7f0c002f;
+		public static final int rootLayout = 0x7f0c002d;
+		public static final int scrollView1 = 0x7f0c002e;
+		public static final int textViewLabel = 0x7f0c0034;
 	}
 	public static final class layout {
 		public static final int daidalos_file_chooser = 0x7f030007;

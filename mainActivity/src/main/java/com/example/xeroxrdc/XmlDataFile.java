@@ -14,6 +14,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+
+import org.opencv.core.Rect;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -265,6 +267,7 @@ class XmlObject {
     private String name;
     private ArrayList<Float> distances;
     private Boolean reference;
+    private Rect rect;
 
     /**
      * The constructor for the class
@@ -275,6 +278,7 @@ class XmlObject {
         name = "";
         distances = new ArrayList<Float>();
         reference = Boolean.FALSE;
+        rect = new Rect(0,0,0,0);
     }
 
     /**
@@ -292,6 +296,8 @@ class XmlObject {
     public ArrayList<Float> getDistances() {
         return distances;
     }
+
+    public Rect getRect() { return rect; }
 
     /**
      * Returns the state of the object, reference or non-reference
@@ -329,6 +335,10 @@ class XmlObject {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setRect(Rect rect) {
+        this.rect = rect;
     }
 
     /**
