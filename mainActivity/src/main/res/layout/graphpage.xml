@@ -34,6 +34,15 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="Save Graph" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find contours"
+            android:id="@+id/button_contours"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:onClick="sendMessage" />
 	    
 	    <TextView
             android:id="@+id/directoryChosenLabel"

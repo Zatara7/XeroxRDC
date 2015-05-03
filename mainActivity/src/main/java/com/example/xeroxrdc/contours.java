@@ -22,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -51,10 +52,11 @@ public class contours extends Activity {
     Context context = this;
     int radioValue;
     RadioButton rb;
-    String rbValue;
+    String rbValue = "no";
     boolean yes = true;
     List<String> list = new ArrayList<>();
     XmlObjects selectedObjects = new XmlObjects();
+    int dist_measure = 0;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -208,8 +210,8 @@ public class contours extends Activity {
         View promptView = layout.inflate(R.layout.activity2, null);
         final EditText editText = (EditText) promptView.findViewById(R.id.edit1);
         editText.setText(xmlObject.getName(), TextView.BufferType.EDITABLE);
-        //AlertDialog to get the name of the object and set it as reference object or not
 
+        //AlertDialog to get the name of the object and set it as reference object or not
         final AlertDialog.Builder alert = new AlertDialog.Builder(contours.this);
         alert.setView(promptView);
         alert.setTitle("Object Selection");
@@ -245,93 +247,53 @@ public class contours extends Activity {
     private Boolean checkName(String name, int which) {
         Boolean checker = Boolean.TRUE;
         if (name.equals("")) {
-            final AlertDialog alertName = new AlertDialog.Builder(contours.this).create();
-            alertName.setTitle("Alert");
-            alertName.setMessage("Name should not be blank.  No data saved.");
-            alertName.setButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    alertName.dismiss();
-                }
-            });
-            alertName.show();
+            blankNameAlert();
             checker = Boolean.FALSE;
         } else {
             for (XmlObject object : selectedObjects.getXmlObjects()) {
                 if (name.equals(object.getName())) {
                     checker = Boolean.FALSE;
-                    final AlertDialog a = new AlertDialog.Builder(contours.this).create();
-                    a.setTitle("Alert");
-                    a.setMessage("Name already exists.  Name data will see no change; however, all other data will be saved.");
-                    a.setButton(which, "OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            a.dismiss();
-                        }
-                    });
-
-                    a.show();
+                    nameAlreadyExistsAlert(which);
                 }
             }
         }
         return checker;
     }
 
+    public void onToggleClicked(View view) {
+
+        boolean horizontal= ((ToggleButton) view).isChecked();
+
+        if (horizontal) {
+            dist_measure=0;
+            Toast.makeText(getApplicationContext(),
+                    "Selected Horizontal distance measure", Toast.LENGTH_SHORT).show();
+        } else {
+            dist_measure=1;
+            Toast.makeText(getApplicationContext(),
+                    "Selected Vertical distance measure", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
         switch (view.getId()) {
+
             case R.id.radio_yes:
-                System.out.println("Here");
                 for(XmlObject xmlObject : selectedObjects.getXmlObjects()) {
                     if(xmlObject.getReference()) {
-                        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                        alertDialog.setTitle("Alert");
-                        alertDialog.setMessage("Reference object already set.  Reference will be saved as false.  To save this as reference, remove previous reference.");
-                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertDialog.dismiss();
-                            }
-                        });
-
-                        alertDialog.show();
+                        referenceAlert();
                         return;
                     }
                 }
 
                 rbValue = "yes";
-
-                System.out.println(rbValue);
-
                 break;
-
-                /*if (checked) {
-                    if(yes) {
-                        yes = false;
-                        rbValue = "yes";
-                        Toast.makeText(getApplicationContext(),
-                                "Selected Yes", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        //Alert dialog if the reference object is already selected
-                        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                        alertDialog.setTitle("Alert");
-                        alertDialog.setMessage("Reference object already set");
-                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertDialog.dismiss();
-                            }
-                        });
-
-                        alertDialog.show();
-                    }
-                    break;
-                }*/
             case R.id.radio_no:
                 if (checked) {
                     rbValue = "no";
-                    System.out.println(rbValue);
-                    //Toast.makeText(getApplicationContext(), "Selected No", Toast.LENGTH_SHORT).show();
-                    break;
                 }
+                break;
         }
     }
 
@@ -341,5 +303,45 @@ public class contours extends Activity {
         } else {
             return Boolean.FALSE;
         }
+    }
+
+    private void blankNameAlert() {
+        final AlertDialog alertName = new AlertDialog.Builder(contours.this).create();
+        alertName.setTitle("Alert");
+        alertName.setMessage("Name should not be blank.  No data saved.");
+        alertName.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertName.dismiss();
+            }
+        });
+        alertName.show();
+    }
+
+    private void nameAlreadyExistsAlert(int which) {
+        final AlertDialog a = new AlertDialog.Builder(contours.this).create();
+        a.setTitle("Alert");
+        a.setMessage("Name already exists.  Name data will see no change; however, all other data will be saved.");
+        a.setButton(which, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                a.dismiss();
+            }
+        });
+
+        a.show();
+    }
+
+    private void referenceAlert() {
+        rbValue = "no";
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("Reference object already set.  Reference will be saved as false.  To save this as reference, remove previous reference.");
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 }

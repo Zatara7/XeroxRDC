@@ -41,6 +41,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	private View rootView;
 	private Button imgScan;
 	private Button chooseDirectoryButton;
+    private Button contours_btn;
 	private Button referenceButton;
 	private Button saveGraphButton;
 	public static boolean topImage = true;
@@ -58,13 +59,14 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 		chooseDirectoryButton = (Button) rootView.findViewById(R.id.chooseDirectoryButton);
 		referenceButton = (Button) rootView.findViewById(R.id.referenceButton);
 		saveGraphButton = (Button) rootView.findViewById(R.id.saveGraphButton);
-
+        contours_btn = (Button) rootView.findViewById(R.id.button_contours);
 		
 		// Set callbacks
 		imgScan.setOnClickListener(this);
 		chooseDirectoryButton.setOnClickListener(this);
 		referenceButton.setOnClickListener(this);
 		saveGraphButton.setOnClickListener(this);
+        contours_btn.setOnClickListener(this);
 
 		// Set up the toggle button to switch between displaying the top/bottom
 		// image when clicking the graph
@@ -227,6 +229,11 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	@Override
 	public void onClick(View v)
 	{
+        if (v==contours_btn) {
+            Intent intent = new Intent(rootView.getContext(), contours.class);
+            startActivityForResult(intent, 0);
+
+        }
 		if (v == imgScan)
 			onClickImageAnalysis();
 		

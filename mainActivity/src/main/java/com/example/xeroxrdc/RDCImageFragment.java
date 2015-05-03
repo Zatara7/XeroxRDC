@@ -39,7 +39,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 {
 	private View rootView;
 	private Button openImage0;
-    private Button contours_btn;
 	private Button openImage1;
 	private Button analysis0;
 	private Button analysis1;
@@ -63,7 +62,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		rootView = inflater.inflate(R.layout.imagepage, container, false);
 		
 		openImage0 = (Button) rootView.findViewById(R.id.openimage0);
-        contours_btn = (Button) rootView.findViewById(R.id.button_contours);
         openImage1 = (Button) rootView.findViewById(R.id.openimage1);
 		analysis0 = (Button) rootView.findViewById(R.id.analysis0);
 		analysis1 = (Button) rootView.findViewById(R.id.analysis1);
@@ -94,20 +92,16 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		return rootView;
 	}
 
-	public void openImage()
+	/*public void openImage()
 	{
 //		imageView.setImageURI(Uri.fromFile(new File("drawable/computer_problems.png")));
-	}
+	}*/
 
 
 	@Override
 	public void onClick(View v)
 	{
-        if (v==contours_btn) {
-            Intent intent = new Intent(rootView.getContext(), contours.class);
-            startActivityForResult(intent, 0);
-        }
-		if (v==openImage0 || v==openImage1)
+        if (v==openImage0 || v==openImage1)
 		{
 		     FileChooserDialog dialog = new FileChooserDialog(getActivity());
 			 dialog.loadFolder(previousDirectoryChosen);
@@ -131,8 +125,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		            		 imageView0.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
 		            	 }
 		            	 previousDirectoryChosen = file.getParent() + File.separator;
-		            	 
-		            	 
 		            		
 		 				// get path of image
 		 				directoryPathLeft = txtResults0.getText().toString();
@@ -195,7 +187,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 	private void setGridOnButtonListener(){
 		showGridButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
-				if (gridOn == true){
+				if (gridOn){
 					gridOn = false;
 					if (leftFile != null)
 						imageView0.setImageBitmap(BitmapFactory.decodeFile(leftFile.getAbsolutePath()));
@@ -217,9 +209,9 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		gridHeight.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 				vertical_distance = (int) (300.00 * arg0.getProgress() / arg0.getMax()) + 100;
-				if (leftFile != null && gridOn == true)
+				if (leftFile != null && gridOn)
 					drawCanvas("left", imageView0);
-				if (rightFile != null && gridOn == true)
+				if (rightFile != null && gridOn)
 					drawCanvas("right", imageView1);
 			}
 			public void onStartTrackingTouch(SeekBar arg0) {
@@ -230,9 +222,9 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		gridWidth.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 				horizontal_distance = (int) (300.00 * arg0.getProgress() / arg0.getMax()) + 100;
-				if (leftFile != null && gridOn == true)
+				if (leftFile != null && gridOn)
 					drawCanvas("left", imageView0);
-				if (rightFile != null && gridOn == true)
+				if (rightFile != null && gridOn)
 					drawCanvas("right", imageView1);
 			}
 			public void onStartTrackingTouch(SeekBar arg0) {
@@ -249,7 +241,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		else
 			file = rightFile;
 		
-		
 		//Initialize canvas
    	 	Paint myPaint = new Paint();
    	 	myPaint.setColor(Color.RED);
@@ -265,7 +256,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 		for (int i = 0; i < tempBitmap.getHeight() / vertical_distance + 1; i++){
 			tempCanvas.drawLine(0, i*vertical_distance,tempBitmap.getWidth(), i*vertical_distance, myPaint);
 		}
-		
 
 		for (int i = 0; i < tempBitmap.getWidth() / horizontal_distance + 1; i++){
 			tempCanvas.drawLine(i*horizontal_distance, 0,i*horizontal_distance,tempBitmap.getHeight(), myPaint);
@@ -278,10 +268,8 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 	private File leftFile;
 	private File rightFile;
 	
-	
-	
 	private void setImageOnTouchListener(String s){
-		if (s == "left"){
+		if (s.equals("left")){
 			imageView0.setOnTouchListener(new OnTouchListener(){
 
 				@Override
@@ -290,8 +278,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 					
 					//Get coordinates
 					float y = event.getRawY();
-					
-				
+
 					//Bottom 
 					if (y < v.getHeight()/2){
 						leftImageRotationAngle += 90;
@@ -305,7 +292,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 					
 					return false;
 				}
-				
 			});
 		} else{
 			imageView1.setOnTouchListener(new OnTouchListener(){
@@ -335,8 +321,6 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 				
 			});
 		}
-			
-		
 	}
 	
 	private float leftImageRotationAngle = 0;
@@ -353,7 +337,7 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 	private void setAnalysisButtonListener(){
 		analysis0.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				if (fileNameLeft == "")
+				if (fileNameLeft.equals(""))
 					return;
 				
 			
@@ -364,22 +348,12 @@ public class RDCImageFragment extends Fragment implements OnClickListener
 				newIntent.putExtra("directoryPath",directoryPathLeft);
 				startActivity(newIntent);
 			}
-			
 		});
-        contours_btn.setOnClickListener(new OnClickListener(){
-            public void onClick(View v){
-
-                Intent newIntent = new Intent(getActivity(), contours.class);
-                startActivity(newIntent);
-
-            }
-
-        });
 		// listener for right analysis button clicked
 		analysis1.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
 				
-				if (fileNameRight == "")
+				if (fileNameRight.equals(""))
 					return;
 			
 				// send to noise removal
