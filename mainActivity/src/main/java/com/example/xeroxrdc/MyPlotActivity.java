@@ -76,8 +76,8 @@ public class MyPlotActivity extends Activity
 
         plot.setDomainLabel("Image Number");
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        plot.setRangeLabel("mm");
-        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
+        plot.setRangeLabel("Pixels");
+        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 100);
         plot.setRangeBottomMax(0.0);
         plot.setRangeTopMin(5.0);
         plot.setTicksPerRangeLabel(4);

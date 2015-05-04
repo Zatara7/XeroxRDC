@@ -32,7 +32,8 @@ import org.w3c.dom.NodeList;
 public class XmlDataFile {
     public XmlObjects data(String file) {
         XmlDataFile xml = new XmlDataFile();
-        XmlObjects xmlObjects;
+        XmlObjects xmlObjects = new XmlObjects();
+       /* XmlObjects xmlObjects;
         XmlObject obj1 = new XmlObject();
         XmlObject obj2 = new XmlObject();
         XmlObject obj3 = new XmlObject();
@@ -77,8 +78,8 @@ public class XmlDataFile {
 
         xmlObjects.print();
 
-        String fileName = xml.writeXml(xmlObjects, file);
-        if(fileName != null) {
+        String fileName = xml.writeXml(xmlObjects, file);*/
+        if(file != null) {
             xmlObjects = xml.parseXml(new File(file));
         }
 
@@ -268,6 +269,7 @@ class XmlObject {
     private ArrayList<Float> distances;
     private Boolean reference;
     private Rect rect;
+    private Boolean orientation;
 
     /**
      * The constructor for the class
@@ -279,6 +281,7 @@ class XmlObject {
         distances = new ArrayList<Float>();
         reference = Boolean.FALSE;
         rect = new Rect(0,0,0,0);
+        orientation = Boolean.TRUE;
     }
 
     /**
@@ -298,6 +301,8 @@ class XmlObject {
     }
 
     public Rect getRect() { return rect; }
+
+    public Boolean getOrientation() { return orientation;}
 
     /**
      * Returns the state of the object, reference or non-reference
@@ -340,6 +345,8 @@ class XmlObject {
     public void setRect(Rect rect) {
         this.rect = rect;
     }
+
+    public void setOrientation(Boolean orientation) {this.orientation = orientation;}
 
     /**
      * Sets the reference of the object.  If the object is the reference object, then set distance list to null

@@ -9,6 +9,7 @@ package com.example.xeroxrdc;
  */
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	public static boolean topImage = true;
 	public static boolean graphExists = false;
     private List<String> filenameList;
+    String xmlFile;
 
     private TextView chooseDirectoryTextView;
 
@@ -59,14 +61,14 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 		chooseDirectoryButton = (Button) rootView.findViewById(R.id.chooseDirectoryButton);
 		referenceButton = (Button) rootView.findViewById(R.id.referenceButton);
 		saveGraphButton = (Button) rootView.findViewById(R.id.saveGraphButton);
-        contours_btn = (Button) rootView.findViewById(R.id.button_contours);
+        //contours_btn = (Button) rootView.findViewById(R.id.button_contours);
 		
 		// Set callbacks
 		imgScan.setOnClickListener(this);
 		chooseDirectoryButton.setOnClickListener(this);
 		referenceButton.setOnClickListener(this);
 		saveGraphButton.setOnClickListener(this);
-        contours_btn.setOnClickListener(this);
+        //contours_btn.setOnClickListener(this);
 
 		// Set up the toggle button to switch between displaying the top/bottom
 		// image when clicking the graph
@@ -175,7 +177,7 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	private class imageAnalysis extends AsyncTask<String , Integer, Integer> {
 		ProgressDialog usrDialog;
 		int numValsInList;				//Stores number of frames passed. This way .size() isn't called multiple times
-        String xmlFile;
+
 
 		protected void onPreExecute() {
 			usrDialog = new ProgressDialog(getActivity());		//Prepping progress bar
@@ -198,6 +200,11 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
                     break;
                 }
             }
+
+            Intent intent = new Intent(rootView.getContext(), contours.class);
+            ArrayList<String> list = new ArrayList<>(filenameList);
+            intent.putStringArrayListExtra("fileNames", list);
+            startActivityForResult(intent, 0);
 
             return 0;
 		}
@@ -229,11 +236,12 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	@Override
 	public void onClick(View v)
 	{
-        if (v==contours_btn) {
+        /*if (v==contours_btn) {
             Intent intent = new Intent(rootView.getContext(), contours.class);
+            ArrayList<String> list = new ArrayList<>(filenameList);
+            intent.putStringArrayListExtra("fileNames", list);
             startActivityForResult(intent, 0);
-
-        }
+        }*/
 		if (v == imgScan)
 			onClickImageAnalysis();
 		
@@ -301,19 +309,18 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
                 source.hide();
                 Toast toast = Toast.makeText(source.getContext(),
                         "Folder selected: " + file.getName(), Toast.LENGTH_LONG);
-                chooseDirectoryTextView.setText(file.getAbsolutePath()
-                        + File.separator);
-                toast.show();
+                chooseDirectoryTextView.setText(file.getAbsolutePath()+ File.separator);
+                //toast.show();
                 return file;
             }
 
             // Might be able to take this out:
             public void onFileSelected(Dialog source, File folder, String name) {
                 source.hide();
-                Toast toast = Toast.makeText(source.getContext(),
+                /*Toast toast = Toast.makeText(source.getContext(),
                         "File created: " + folder.getName() + "/" + name,
                         Toast.LENGTH_LONG);
-                toast.show();
+                toast.show();*/
             }
         });
 
@@ -326,7 +333,8 @@ public class RDCGraphFragment extends Fragment implements OnClickListener
 	private void onClickReference()
 	{
 		// Open activity to let the user toggle which features to show
-		startActivity(new Intent(getActivity(), FeatureSelectionActivity.class));
+		//startActivity(new Intent(getActivity(), FeatureSelectionActivity.class));
+        displayLineGraph(xmlFile);
 	}
 
 	// This is where the graph is created/drawn

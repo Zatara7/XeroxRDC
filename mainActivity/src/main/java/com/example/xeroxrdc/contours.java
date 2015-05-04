@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -56,7 +59,11 @@ public class contours extends Activity {
     boolean yes = true;
     List<String> list = new ArrayList<>();
     XmlObjects selectedObjects = new XmlObjects();
-    int dist_measure = 0;
+    Boolean dist_measure = Boolean.TRUE;
+    ArrayList<String> fileNameList = new ArrayList<>();
+    Iterator<String> i;
+    int iteratorIndex = 0;
+    Spinner spinObject;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,6 +71,11 @@ public class contours extends Activity {
         setContentView(R.layout.contours);
         Button button = (Button) findViewById(R.id.continueButton);
         final ImageView iv = (ImageView) findViewById(R.id.imageView1);
+        Bundle extras = getIntent().getExtras();
+        fileNameList = extras.getStringArrayList("fileNames");
+        System.out.println(fileNameList.toString());
+
+        i = fileNameList.iterator();
 
         iv.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -90,33 +102,44 @@ public class contours extends Activity {
                     System.out.println("I am in the listener!");
                     int checker = 0;
 
-                    Iterator<XmlObject> iterator = selectedObjects.getXmlObjects().iterator();
 
-                    while(iterator.hasNext()) {
-                        XmlObject xmlObject = iterator.next();
-                        if(xmlObject.getRect().contains(new Point(xx,yy))) {
-                            object_clicked(xmlObject);
-                            checker = 1;
-                        }
-                    }
 
-                    if(checker == 0) {
-                        for (int i = 0; i < rectBoundaries.size(); i++) {
-                            Rect j = rectBoundaries.get(i);
+                        Iterator<XmlObject> iterator = selectedObjects.getXmlObjects().iterator();
 
-                            if (j.contains(new Point(xx, yy))) {
-                                System.out.println("Rect X: " + j.x + " Rect Y: " + j.y + " Rect width:" + j.width + " Rect height:" + j.height);
-                                checker = 1;
-                                XmlObject xmlObject = new XmlObject();
-                                xmlObject.setRect(j);
-                                xmlObject = object_clicked(xmlObject);
-
-     /* Figure this out */      selectedObjects.add(xmlObject);
-
-                                break;
+                        while (iterator.hasNext()) {
+                            XmlObject xmlObject = iterator.next();
+                            if (xmlObject.getRect().contains(new Point(xx, yy))) {
+                                if(iteratorIndex > 0) {
+                                    spinnerSelection(xmlObject.getRect());
+                                    checker = 1;
+                                } else {
+                                    object_clicked(xmlObject);
+                                    checker = 1;
+                                }
                             }
                         }
-                    }
+
+                        if (checker == 0) {
+                            for (int i = 0; i < rectBoundaries.size(); i++) {
+                                Rect j = rectBoundaries.get(i);
+
+                                if (j.contains(new Point(xx, yy))) {
+                                    System.out.println("Rect X: " + j.x + " Rect Y: " + j.y + " Rect width:" + j.width + " Rect height:" + j.height);
+                                    checker = 1;
+                                    if(iteratorIndex > 0) {
+                                        spinnerSelection(j);
+                                    } else {
+                                        XmlObject xmlObject = new XmlObject();
+                                        xmlObject.setRect(j);
+                                        xmlObject = object_clicked(xmlObject);
+ /* Figure this out */
+                                        selectedObjects.add(xmlObject);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
 
                     if(checker == 0) {
                         System.out.println("Object was not clicked!");
@@ -128,10 +151,66 @@ public class contours extends Activity {
         });
 
         button.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                XmlDataFile xmlDataFile = new XmlDataFile();
-                xmlDataFile.writeXml(selectedObjects, "/storage/sdcard0/XeroxRDC/2015_02_09/test.xml");
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+
+                    Iterator<XmlObject> iterator = selectedObjects.getXmlObjects().iterator();
+                    XmlObject referenceObj = new XmlObject();
+
+                    while (iterator.hasNext()) {
+                        XmlObject obj = iterator.next();
+
+                        if (obj.getReference()) {
+                            referenceObj = obj;
+                            break;
+                        }
+                    }
+
+                    iterator = selectedObjects.getXmlObjects().iterator();
+
+                    while (iterator.hasNext()) {
+                        XmlObject obj = iterator.next();
+
+                        if (obj.getReference()) {
+
+                        } else {
+                            Rect rect1, refRect;
+                            int distance;
+                            rect1 = obj.getRect();
+                            refRect = referenceObj.getRect();
+                            if (obj.getOrientation()) {
+
+                                if (rect1.x < refRect.x) {
+                                    distance = refRect.x - (int) rect1.br().x;
+                                } else {
+                                    distance = rect1.x - (int) refRect.br().x;
+                                }
+                            } else {
+                                if (rect1.y < refRect.y) {
+                                    distance = refRect.y - (int) rect1.br().y;
+                                } else {
+                                    distance = rect1.y - (int) refRect.br().y;
+                                }
+                            }
+                            obj.addDistance(Math.abs((float) distance));
+                        }
+                    }
+
+                    XmlDataFile xmlDataFile = new XmlDataFile();
+                    xmlDataFile.writeXml(selectedObjects, "/storage/sdcard0/XeroxRDC/Showcase/test.xml");
+
+                    if(i.hasNext()) {
+                        String pathName = i.next();
+                        iteratorIndex++;
+                        find_contours(pathName);
+                    }else{
+                        finish();
+                    }
+
+                }
 
                 return true;
             }
@@ -143,7 +222,12 @@ public class contours extends Activity {
         public void onManagerConnected(int status) {
             if (status == LoaderCallbackInterface.SUCCESS ) {
                 // now we can call opencv code !
-                find_contours();
+
+                if(i.hasNext()) {
+                    String pathName = i.next();
+                    find_contours(pathName);
+                }
+
             } else {
                 super.onManagerConnected(status);
             }
@@ -158,10 +242,10 @@ public class contours extends Activity {
         // so any opencv call here will lead to unresolved native errors.
     }
 
-    public void find_contours() {
+    public void find_contours(String pathName) {
         Rect r;
         // Open image
-        Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aligned1);
+        Bitmap mBitmap = BitmapFactory.decodeFile(pathName);
 
         Mat img = new Mat();
         Mat newImg = new Mat();
@@ -229,6 +313,8 @@ public class contours extends Activity {
                     xmlObject.setReference(Boolean.FALSE);
                 }
 
+                xmlObject.setOrientation(dist_measure);
+
                 selectedObjects.print();
             }
         });
@@ -242,6 +328,47 @@ public class contours extends Activity {
         alert.create();
         alert.show();
         return xmlObject;
+    }
+
+    private void spinnerSelection(final Rect rect) {
+        LayoutInflater layout = LayoutInflater.from(contours.this);
+        View promptView = layout.inflate(R.layout.activity_spinner, null);
+
+        spinObject = (Spinner) promptView.findViewById(R.id.spinner);
+        List<String> objectNames = new ArrayList<>();
+
+        Iterator<XmlObject> iterator = selectedObjects.getXmlObjects().iterator();
+        while (iterator.hasNext()) {
+            XmlObject obj = iterator.next();
+            objectNames.add(obj.getName());
+        }
+
+        final ArrayList<String> objNames = new ArrayList<>(objectNames);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(contours.this, android.R.layout.simple_spinner_item, objNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinObject.setAdapter(adapter);
+
+        spinObject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                for(XmlObject xmlObject : selectedObjects.getXmlObjects()) {
+                    if(objNames.get(position).equals(xmlObject.getName())) {
+                        xmlObject.setRect(rect);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void populateSpinner(ArrayList<String> objects) {
+
     }
 
     private Boolean checkName(String name, int which) {
@@ -265,11 +392,11 @@ public class contours extends Activity {
         boolean horizontal= ((ToggleButton) view).isChecked();
 
         if (horizontal) {
-            dist_measure=0;
+            dist_measure= Boolean.TRUE;
             Toast.makeText(getApplicationContext(),
                     "Selected Horizontal distance measure", Toast.LENGTH_SHORT).show();
         } else {
-            dist_measure=1;
+            dist_measure= Boolean.FALSE;
             Toast.makeText(getApplicationContext(),
                     "Selected Vertical distance measure", Toast.LENGTH_SHORT).show();
         }
